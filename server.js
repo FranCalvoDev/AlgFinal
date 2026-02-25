@@ -88,45 +88,6 @@ db.connect(err => {
     console.log('Conectado a MySQL 8.0 en Laragon');
 });
 
-// Función para notificar a todos los clientes conectados
-function notificarCambios(evento, datos) {
-    clientes.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ evento, datos, timestamp: new Date() }));
-        }
-    });
-    console.log(`📢 Evento: ${evento}`);
-}
-
-// ============================================
-// UTILIDADES Y FUNCIONES AUXILIARES
-// ============================================
-
-function getPeriodoActual() {
-    const hoy = new Date();
-    const año = hoy.getFullYear();
-    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-    return `${año}-${mes}`;
-}
-
-function manejarError(res, err, mensaje, statusCode = 500) {
-    console.error(`[ERROR] ${mensaje}:`, err);
-    res.status(statusCode).json({ 
-        error: mensaje,
-        detalles: err.message 
-    });
-}
-
-function validarDNI(dni) {
-    return dni && dni.length > 0 && dni.length <= 15;
-}
-
-function registrarAuditoria(usuario_id, accion, detalles) {
-    const sql = `INSERT INTO auditoria (usuario_id, accion, detalles) VALUES (?, ?, ?)`;
-    db.query(sql, [usuario_id, accion, JSON.stringify(detalles)], (err) => {
-        if (err) console.error('Error registrando auditoría:', err);
-    });
-}
 
 // ============================================
 // CREAR TABLA DE AUDITORÍA (SI NO EXISTE)

@@ -328,65 +328,68 @@
 
                     <!-- TAB: TURNOS -->
                     <div id="tab-turnos" class="tab-pane fade">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="card">
-                                    <div class="card-header bg-success text-white">
-                                        <h5 class="mb-0"><i class="fas fa-plus"></i> Crear Turno</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label class="form-label">Fecha</label>
-                                            <input type="date" id="turno-fecha" class="form-control">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Hora</label>
-                                            <input type="time" id="turno-hora" class="form-control">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Actividad</label>
-                                            <input type="text" id="turno-actividad" class="form-control" placeholder="Funcional, Yoga...">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Cupo Máximo</label>
-                                            <input type="number" id="turno-cupo" class="form-control" placeholder="15" min="1">
-                                        </div>
-                                        <button onclick="crearTurno()" class="btn btn-success w-100">
-                                            <i class="fas fa-save"></i> Crear Turno
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="card">
-                                    <div class="card-header bg-warning text-dark">
-                                        <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Turnos</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <button onclick="cargarTurnosAdmin()" class="btn btn-warning btn-sm w-100 mb-3">
-                                            <i class="fas fa-sync"></i> Actualizar
-                                        </button>
-                                        <div class="table-responsive">
-                                            <table class="table table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Fecha</th>
-                                                        <th>Hora</th>
-                                                        <th>Actividad</th>
-                                                        <th>Cupo</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tabla-turnos">
-                                                    <tr><td colspan="4" class="text-center text-muted">Cargando...</td></tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <!-- CREAR TURNO -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-plus"></i> Crear Turno</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" id="turno-fecha" class="form-control">
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hora</label>
+                        <input type="time" id="turno-hora" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Actividad</label>
+                        <input type="text" id="turno-actividad" class="form-control" placeholder="Funcional, Yoga...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cupo Máximo</label>
+                        <input type="number" id="turno-cupo" class="form-control" placeholder="15" min="1">
+                    </div>
+                    <button onclick="crearTurno()" class="btn btn-success w-100">
+                        <i class="fas fa-save"></i> Crear Turno
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Turnos y Personas Inscritas</h5>
+                </div>
+                <div class="card-body">
+                    <button onclick="cargarTurnosAdmin()" class="btn btn-warning btn-sm w-100 mb-3">
+                        <i class="fas fa-sync"></i> Actualizar
+                    </button>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Actividad</th>
+                                    <th>Cupo</th>
+                                    <th>Personas</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-turnos">
+                                <tr><td colspan="6" class="text-center text-muted">Cargando...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <!-- TAB: FINANZAS -->
                     <div id="tab-finanzas" class="tab-pane fade">
@@ -810,20 +813,205 @@ async function registro(e) {
     }
 
     async function cargarTurnosAdmin() {
-        const data = await api(`${API_URL}/admin/turnos`);
-        if (data) {
-            let html = '';
-            data.forEach(t => {
-                html += `<tr>
-                    <td>${formatDate(t.fecha)}</td>
-                    <td>${t.hora.substring(0, 5)}</td>
-                    <td>${t.actividad}</td>
-                    <td>${t.inscriptos}/${t.cupo_maximo}</td>
-                </tr>`;
-            });
-            document.getElementById('tabla-turnos').innerHTML = html;
-        }
+    const data = await api(`${API_URL}/admin/turnos`);
+    if (data) {
+        let html = '';
+        data.forEach(t => {
+            const estadoClass = t.estado === 'ACTIVO' 
+                ? 'bg-success' 
+                : 'bg-danger';
+            
+            const cupoClass = t.cupo_disponible === 0
+                ? 'bg-danger text-white'
+                : t.cupo_disponible <= 2
+                ? 'bg-warning'
+                : 'bg-info text-white';
+            
+            html += `<tr>
+                <td><strong>${formatDate(t.fecha)}</strong></td>
+                <td>${t.hora.substring(0, 5)}</td>
+                <td>${t.actividad}</td>
+                <td><span class="badge ${cupoClass}">${t.inscriptos}/${t.cupo_maximo}</span></td>
+                <td>
+                    <button onclick="verInscritos(${t.id_turno})" class="btn btn-info btn-sm btn-action">
+                        <i class="fas fa-users"></i> Ver (${t.inscriptos})
+                    </button>
+                </td>
+                <td>
+                    ${t.estado === 'ACTIVO' ? `
+                        <button onclick="cancelarTurno(${t.id_turno})" class="btn btn-danger btn-sm btn-action">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    ` : '<span class="badge bg-secondary">Cancelado</span>'}
+                </td>
+            </tr>`;
+        });
+        document.getElementById('tabla-turnos').innerHTML = html;
     }
+}
+    
+    async function verInscritos(turnoId) {
+    const data = await api(`${API_URL}/admin/turnos/${turnoId}/inscriptos`);
+    
+    if (data) {
+        let html = `
+            <div class="modal fade" id="modalInscritos" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title"><i class="fas fa-list"></i> Personas Inscritas</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+        `;
+        
+        if (data.length === 0) {
+            html += `<div class="alert alert-warning">
+                <i class="fas fa-info-circle"></i> No hay personas inscritas en este turno
+            </div>`;
+        } else {
+            html += `
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Categoría</th>
+                            <th>Fecha Inscripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            data.forEach(inscripto => {
+                const categoriaBadge = {
+                    'A': '<span class="badge bg-success">A - Especial</span>',
+                    'B': '<span class="badge bg-primary">B - Asiduo</span>',
+                    'C': '<span class="badge bg-secondary">C - Normal</span>'
+                };
+                
+                html += `
+                    <tr>
+                        <td><strong>${inscripto.dni}</strong></td>
+                        <td>${inscripto.nombre}</td>
+                        <td>${inscripto.apellido}</td>
+                        <td>${categoriaBadge[inscripto.categoria] || inscripto.categoria}</td>
+                        <td>${formatDate(inscripto.fecha)}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <div class="alert alert-info mt-3">
+                    <strong>Total de inscritos:</strong> ${data.length}
+                </div>
+            `;
+        }
+        
+        html += `
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Crear y mostrar modal
+        let modalDiv = document.getElementById('modalInscritos');
+        if (modalDiv) modalDiv.remove();
+        
+        document.body.insertAdjacentHTML('beforeend', html);
+        const modal = new bootstrap.Modal(document.getElementById('modalInscritos'));
+        modal.show();
+        
+        notif(`${data.length} personas inscritas en este turno`, 'info');
+    }
+}
+async function verInscritos(turnoId) {
+    const data = await api(`${API_URL}/admin/turnos/${turnoId}/inscriptos`);
+    
+    if (data) {
+        let html = `
+            <div class="modal fade" id="modalInscritos" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title"><i class="fas fa-list"></i> Personas Inscritas en el Turno</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+        `;
+        
+        if (data.length === 0) {
+            html += `<div class="alert alert-warning">
+                <i class="fas fa-info-circle"></i> No hay personas inscritas en este turno
+            </div>`;
+        } else {
+            html += `
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Categoría</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            data.forEach(inscripto => {
+                const categoriaBadge = {
+                    'A': '<span class="badge bg-success">A - Especial</span>',
+                    'B': '<span class="badge bg-primary">B - Asiduo</span>',
+                    'C': '<span class="badge bg-secondary">C - Normal</span>'
+                };
+                
+                html += `
+                    <tr>
+                        <td><strong>${inscripto.dni}</strong></td>
+                        <td>${inscripto.nombre}</td>
+                        <td>${inscripto.apellido}</td>
+                        <td>${categoriaBadge[inscripto.categoria] || inscripto.categoria}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <div class="alert alert-info mt-3">
+                    <strong><i class="fas fa-users"></i> Total de inscritos:</strong> ${data.length}
+                </div>
+            `;
+        }
+        
+        html += `
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Remover modal anterior si existe
+        let modalDiv = document.getElementById('modalInscritos');
+        if (modalDiv) modalDiv.remove();
+        
+        // Agregar y mostrar modal
+        document.body.insertAdjacentHTML('beforeend', html);
+        const modal = new bootstrap.Modal(document.getElementById('modalInscritos'));
+        modal.show();
+    }
+}
+
 
     // FINANZAS
     async function registrarPago() {

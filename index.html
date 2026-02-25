@@ -3,342 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym - Sistema de Gestión</title>
+    <title>Sistema de Gestión de Gym</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #2c3e50;
-            --accent: #e74c3c;
+            --secondary: #3498db;
             --success: #27ae60;
+            --danger: #e74c3c;
             --warning: #f39c12;
-            --light-bg: #ecf0f1;
-        }
-
-        * {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        .oculto { display: none !important; }
 
         .navbar-custom {
-            background: linear-gradient(90deg, var(--primary) 0%, #1a252f 100%);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .navbar-custom .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #fff !important;
-        }
-
-        .navbar-custom .nav-link {
-            color: #ecf0f1 !important;
-            margin: 0 5px;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-custom .nav-link:hover {
-            color: var(--accent) !important;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .card {
             border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border-radius: 10px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .btn {
-            border-radius: 5px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: #c0392b;
-        }
-
-        .btn-success {
-            background: var(--success);
-            border: none;
-        }
-
-        .btn-success:hover {
-            background: #229954;
-        }
-
-        .badge-deuda {
-            background: var(--accent);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: 600;
-        }
-
-        .badge-pagado {
-            background: var(--success);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: 600;
-        }
-
-        .turno-card {
-            border-left: 4px solid var(--accent);
-            position: relative;
-        }
-
-        .turno-card.completo {
-            opacity: 0.6;
-            border-left-color: #7f8c8d;
-        }
-
-        .turno-card .badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        .form-section {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
 
-        .alert-custom {
-            border-radius: 8px;
-            border: none;
-        }
-
         .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .login-card {
+        .login-box {
             background: white;
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             width: 100%;
+            max-width: 400px;
         }
 
-        .login-card h2 {
+        .login-box h2 {
             color: var(--primary);
             margin-bottom: 30px;
             text-align: center;
         }
 
-        .login-card input {
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            padding: 12px;
-            margin-bottom: 15px;
+        .main-container {
+            padding: 30px 20px;
         }
 
-        .login-card input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+        .table-custom {
+            border-collapse: collapse;
         }
 
-        .section-title {
-            color: white;
-            margin-bottom: 30px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .tab-content {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .modal-header {
+        .table-custom th {
             background: var(--primary);
             color: white;
-            border: none;
+            padding: 15px;
         }
 
-        .modal-header .btn-close {
-            filter: brightness(2);
+        .estado-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .estado-pagado {
+            background: #d4edda;
+            color: #155724;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .estado-adeudado {
+            background: #f8d7da;
+            color: #721c24;
         }
 
-        .estado-ocupacion {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .hidden {
+            display: none !important;
         }
 
-        .barra-ocupacion {
-            flex: 1;
-            height: 10px;
-            background: #ecf0f1;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .barra-ocupacion-relleno {
-            height: 100%;
-            background: var(--accent);
-            transition: width 0.3s ease;
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin: 2px;
         }
     </style>
 </head>
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
+
+<!-- NAVBAR -->
+<nav id="navbar" class="navbar navbar-custom hidden">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1" style="color: white;">
+            <i class="fas fa-dumbbell"></i> Gym Manager
+        </span>
+        <div style="color: white;">
+            <small>Bienvenido: <strong id="usuario-nombre">-</strong> | 
+            <a href="#" onclick="logout()" style="color: white; text-decoration: none;">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a></small>
+        </div>
+    </div>
+</nav>
+
+<!-- LOGIN / REGISTRO -->
+<div id="login-section" class="login-container">
+    <div class="login-box">
+        <!-- FORM LOGIN -->
+        <form id="form-login" onsubmit="login(event)">
+            <h2 id="titulo-login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</h2>
+            
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <input type="text" id="user" class="form-control" placeholder="Tu usuario" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" id="pass" class="form-control" placeholder="Tu contraseña" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-2">
+                <i class="fas fa-lock"></i> Entrar
+            </button>
+        </form>
+
+        <button onclick="mostrarRegistro()" class="btn btn-success w-100 mb-3">
+            <i class="fas fa-user-plus"></i> Crear Cuenta
+        </button>
+
+        <hr>
+        <small class="text-muted">
+            <strong>Demo:</strong><br>
+            Admin: admin / admin123<br>
+            Cliente: cliente / 123
+        </small>
+    </div>
+
+    <!-- FORM REGISTRO -->
+    <div id="form-registro-container" class="login-box hidden">
+        <form id="form-registro" onsubmit="registro(event)">
+            <h2><i class="fas fa-user-plus"></i> Crear Cuenta</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" id="reg-nombre" class="form-control" placeholder="Juan" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" id="reg-apellido" class="form-control" placeholder="Pérez" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">DNI</label>
+                <input type="text" id="reg-dni" class="form-control" placeholder="12345678" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" id="reg-telefono" class="form-control" placeholder="1234567890">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="reg-email" class="form-control" placeholder="tu@email.com">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select id="reg-categoria" class="form-select" required>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C" selected>C</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Usuario</label>
+                    <input type="text" id="reg-usuario" class="form-control" placeholder="Tu usuario" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" id="reg-password" class="form-control" placeholder="Mínimo 4 caracteres" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confirmar Contraseña</label>
+                <input type="password" id="reg-password-confirm" class="form-control" placeholder="Repite contraseña" required>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mb-2">
+                <i class="fas fa-check"></i> Crear Cuenta
+            </button>
+        </form>
+
+        <button onclick="volverLogin()" class="btn btn-secondary w-100">
+            <i class="fas fa-arrow-left"></i> Volver al Login
+        </button>
+    </div>
+</div>
+
+<!-- PANEL PRINCIPAL -->
+<div id="panel-principal" class="hidden">
+    <div class="main-container">
         <div class="container-fluid">
-            <span class="navbar-brand" id="navbar-titulo">
-                <i class="fas fa-dumbbell"></i> Gym System
-            </span>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <span id="user-info" class="nav-link"></span>
-                    </li>
-                    <li class="nav-item">
-                        <button onclick="logout()" class="btn btn-sm btn-outline-light">
-                            <i class="fas fa-sign-out-alt"></i> Salir
-                        </button>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <!-- LOGIN SECTION -->
-    <div id="seccion-login" class="login-container">
-        <div class="login-card">
-            <h2><i class="fas fa-lock"></i> Iniciar Sesión</h2>
-            <input type="text" id="user" class="form-control" placeholder="Usuario" autocomplete="off">
-            <input type="password" id="pass" class="form-control" placeholder="Contraseña">
-            <button onclick="login()" class="btn btn-primary w-100">
-                <i class="fas fa-sign-in-alt"></i> Entrar
-            </button>
-            <div class="alert alert-info mt-3 small">
-                <strong>Demo:</strong> Usuario: admin / Pass: admin123<br>
-                Usuario: cliente / Pass: 123
-            </div>
-        </div>
-    </div>
-<!-- Modal: Procesar Cuota -->
-<div class="modal fade" id="modalProcesarCuota" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="fas fa-credit-card"></i> Procesar Cuota</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="procesar-cuota-id">
-                <div class="mb-3">
-                    <label class="form-label">Cliente:</label>
-                    <p id="procesar-cuota-nombre" class="alert alert-info mb-0"></p>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Monto a Pagar</label>
-                    <input type="number" id="procesar-cuota-monto" class="form-control" min="1" placeholder="5000">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Período (YYYY-MM)</label>
-                    <input type="text" id="procesar-cuota-periodo" class="form-control" placeholder="2026-02">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="procesarCuota()">
-                    <i class="fas fa-check"></i> Confirmar Pago
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+            <!-- PANEL ADMIN -->
+            <div id="panel-admin" class="hidden">
+                <h3 class="mb-4"><i class="fas fa-cog"></i> Panel Administrativo</h3>
 
-<!-- Modal: Detalles de Cuota -->
-<div class="modal fade" id="modalDetallesCuota" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title"><i class="fas fa-info-circle"></i> Detalles de Cuota</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="detalles-cuota-id">
-                <div class="alert alert-info">
-                    <strong>Cliente:</strong> <span id="detalles-cuota-nombre"></span>
-                </div>
-                <div id="contenedor-detalles-cuota"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-warning" onclick="reactivarCliente()">
-                    <i class="fas fa-undo"></i> Reactivar Cliente
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-    <!-- MAIN CONTENT -->
-    <div id="main-content" class="oculto">
-        <div class="container-fluid py-4">
-
-            <!-- PANEL ADMINISTRATIVO -->
-            <div id="panel-admin" class="oculto">
-                <!-- Nav Tabs Admin -->
-                <ul class="nav nav-tabs mb-4" role="tablist">
+                <!-- TABS ADMIN -->
+                <ul class="nav nav-tabs mb-3" role="tablist">
                     <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-clientes">
+                        <button class="nav-link active" id="tab-clientes-btn" data-bs-toggle="tab" data-bs-target="#tab-clientes">
                             <i class="fas fa-users"></i> Clientes
                         </button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-turnos">
-                            <i class="fas fa-calendar-check"></i> Turnos
+                        <button class="nav-link" id="tab-turnos-btn" data-bs-toggle="tab" data-bs-target="#tab-turnos">
+                            <i class="fas fa-calendar"></i> Turnos
                         </button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-finanzas">
-                            <i class="fas fa-chart-bar"></i> Finanzas
+                        <button class="nav-link" id="tab-finanzas-btn" data-bs-toggle="tab" data-bs-target="#tab-finanzas">
+                            <i class="fas fa-dollar-sign"></i> Finanzas
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="tab-cuotas-btn" data-bs-toggle="tab" data-bs-target="#tab-cuotas">
+                            <i class="fas fa-credit-card"></i> Cuotas
                         </button>
                     </li>
                 </ul>
@@ -348,68 +252,74 @@
                     <!-- TAB: CLIENTES -->
                     <div id="tab-clientes" class="tab-pane fade show active">
                         <div class="row">
-                            <!-- Crear Cliente -->
-                            <div class="col-lg-6 mb-4">
-                                <div class="form-section">
-                                    <h5><i class="fas fa-user-plus"></i> Crear Nuevo Cliente</h5>
-                                    <div class="mb-3">
-                                        <label class="form-label">DNI</label>
-                                        <input type="text" id="nuevo-dni" class="form-control" placeholder="Ej: 12345678">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0"><i class="fas fa-user-plus"></i> Crear Cliente</h5>
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombre</label>
-                                        <input type="text" id="nuevo-nombre" class="form-control" placeholder="Juan">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Apellido</label>
-                                        <input type="text" id="nuevo-apellido" class="form-control" placeholder="Pérez">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Categoría</label>
-                                        <select id="nuevo-categoria" class="form-select">
-                                            <option value="A">Categoría A (Premium)</option>
-                                            <option value="B">Categoría B (Estándar)</option>
-                                            <option value="C" selected>Categoría C (Básica)</option>
-                                        </select>
-                                    </div>
-                                    <button onclick="crearCliente()" class="btn btn-primary w-100">
-                                        <i class="fas fa-save"></i> Crear Cliente
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Listar y Filtrar Clientes -->
-                            <div class="col-lg-6 mb-4">
-                                <div class="form-section">
-                                    <h5><i class="fas fa-filter"></i> Filtrar Clientes</h5>
-                                    <div class="mb-3">
-                                        <label class="form-label">Por Categoría</label>
-                                        <select id="sel-cat" onchange="verClientesPorCategoria()" class="form-select">
-                                            <option value="">-- Todos --</option>
-                                            <option value="A">Categoría A</option>
-                                            <option value="B">Categoría B</option>
-                                            <option value="C">Categoría C</option>
-                                        </select>
-                                    </div>
-                                    <h5>O Buscar por DNI:</h5>
-                                    <div class="mb-3 input-group">
-                                        <input type="text" id="buscar-dni" class="form-control" placeholder="Ej: 12345678">
-                                        <button onclick="buscarClientePorDNI()" class="btn btn-outline-secondary">
-                                            <i class="fas fa-search"></i> Buscar
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">DNI</label>
+                                            <input type="text" id="cliente-dni" class="form-control" placeholder="12345678">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Nombre</label>
+                                            <input type="text" id="cliente-nombre" class="form-control" placeholder="Juan">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Apellido</label>
+                                            <input type="text" id="cliente-apellido" class="form-control" placeholder="Pérez">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Categoría</label>
+                                            <select id="cliente-categoria" class="form-select">
+                                                <option value="A">A</option>
+                                                <option value="B">B</option>
+                                                <option value="C" selected>C</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Teléfono</label>
+                                            <input type="text" id="cliente-telefono" class="form-control" placeholder="1234567890">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" id="cliente-email" class="form-control" placeholder="cliente@test.com">
+                                        </div>
+                                        <button onclick="crearCliente()" class="btn btn-success w-100">
+                                            <i class="fas fa-save"></i> Crear
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-12">
+                            <div class="col-lg-6">
                                 <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="mb-0"><i class="fas fa-list"></i> Listado de Clientes</h5>
+                                    <div class="card-header bg-info text-white">
+                                        <h5 class="mb-0"><i class="fas fa-list"></i> Clientes</h5>
                                     </div>
-                                    <div class="card-body" id="contenedor-clientes">
-                                        <p class="text-muted">Selecciona un filtro para ver clientes</p>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <button onclick="verTodosClientes()" class="btn btn-info btn-sm">Todos</button>
+                                            <button onclick="filtrarClientes('A')" class="btn btn-outline-info btn-sm">A</button>
+                                            <button onclick="filtrarClientes('B')" class="btn btn-outline-info btn-sm">B</button>
+                                            <button onclick="filtrarClientes('C')" class="btn btn-outline-info btn-sm">C</button>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>DNI</th>
+                                                        <th>Nombre</th>
+                                                        <th>Tel</th>
+                                                        <th>Acción</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tabla-clientes">
+                                                    <tr><td colspan="4" class="text-center text-muted">Cargando...</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -418,61 +328,60 @@
 
                     <!-- TAB: TURNOS -->
                     <div id="tab-turnos" class="tab-pane fade">
-                        <div class="row mb-4">
-                            <!-- Crear Turno -->
-                            <div class="col-lg-6 mb-4">
-                                <div class="form-section">
-                                    <h5><i class="fas fa-calendar-plus"></i> Crear Nuevo Turno</h5>
-                                    <div class="mb-3">
-                                        <label class="form-label">Fecha</label>
-                                        <input type="date" id="turno-fecha" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Hora</label>
-                                        <input type="time" id="turno-hora" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Actividad</label>
-                                        <select id="turno-actividad" class="form-select">
-                                            <option value="">-- Selecciona --</option>
-                                            <option value="Funcional">Funcional</option>
-                                            <option value="Musculación">Musculación</option>
-                                            <option value="Cardio">Cardio</option>
-                                            <option value="Yoga">Yoga</option>
-                                            <option value="Pilates">Pilates</option>
-                                            <option value="Zumba">Zumba</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Cupo Máximo</label>
-                                        <input type="number" id="turno-cupo" class="form-control" min="1" value="15">
-                                    </div>
-                                    <button onclick="crearTurno()" class="btn btn-primary w-100">
-                                        <i class="fas fa-save"></i> Crear Turno
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Estadísticas Turnos -->
-                            <div class="col-lg-6 mb-4">
-                                <div class="form-section">
-                                    <h5><i class="fas fa-chart-line"></i> Estadísticas</h5>
-                                    <button onclick="cargarReporteOcupacion()" class="btn btn-info w-100 mb-3">
-                                        <i class="fas fa-redo"></i> Actualizar Reporte
-                                    </button>
-                                    <div id="contenedor-reporte-ocupacion"></div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-lg-6">
                                 <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="mb-0"><i class="fas fa-list"></i> Todos los Turnos</h5>
+                                    <div class="card-header bg-success text-white">
+                                        <h5 class="mb-0"><i class="fas fa-plus"></i> Crear Turno</h5>
                                     </div>
-                                    <div class="card-body" id="contenedor-turnos">
-                                        <p class="text-muted">Cargando turnos...</p>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Fecha</label>
+                                            <input type="date" id="turno-fecha" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Hora</label>
+                                            <input type="time" id="turno-hora" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Actividad</label>
+                                            <input type="text" id="turno-actividad" class="form-control" placeholder="Funcional, Yoga...">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Cupo Máximo</label>
+                                            <input type="number" id="turno-cupo" class="form-control" placeholder="15" min="1">
+                                        </div>
+                                        <button onclick="crearTurno()" class="btn btn-success w-100">
+                                            <i class="fas fa-save"></i> Crear Turno
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header bg-warning text-dark">
+                                        <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Turnos</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <button onclick="cargarTurnosAdmin()" class="btn btn-warning btn-sm w-100 mb-3">
+                                            <i class="fas fa-sync"></i> Actualizar
+                                        </button>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Hora</th>
+                                                        <th>Actividad</th>
+                                                        <th>Cupo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tabla-turnos">
+                                                    <tr><td colspan="4" class="text-center text-muted">Cargando...</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -480,215 +389,80 @@
                     </div>
 
                     <!-- TAB: FINANZAS -->
-<div id="tab-finanzas" class="tab-pane fade">
-    <!-- Tabs internos de Finanzas -->
-    <ul class="nav nav-tabs mb-3" id="tabsFinanzas" role="tablist">
-        <li class="nav-item">
-            <button class="nav-link active" id="tab-registrar-pago" data-bs-toggle="tab" data-bs-target="#contenido-registrar-pago">
-                <i class="fas fa-cash-register"></i> Registrar Pago
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" id="tab-estado-cuotas" data-bs-toggle="tab" data-bs-target="#contenido-estado-cuotas">
-                <i class="fas fa-clipboard-check"></i> Estado de Cuotas
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" id="tab-adeudados" data-bs-toggle="tab" data-bs-target="#contenido-adeudados">
-                <i class="fas fa-exclamation-triangle"></i> Adeudados
-            </button>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <!-- TAB: Registrar Pago -->
-        <div id="contenido-registrar-pago" class="tab-pane fade show active">
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="form-section">
-                        <h5><i class="fas fa-money-bill"></i> Registrar Pago</h5>
-                        <div class="mb-3">
-                            <label class="form-label">Cliente (DNI)</label>
-                            <input type="text" id="pago-dni" class="form-control" placeholder="Ej: 12345678">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Monto</label>
-                            <input type="number" id="pago-monto" class="form-control" min="1" placeholder="5000">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Período (YYYY-MM)</label>
-                            <input type="text" id="pago-periodo" class="form-control" placeholder="2026-02">
-                        </div>
-                        <button onclick="registrarPago()" class="btn btn-primary w-100">
-                            <i class="fas fa-save"></i> Registrar Pago
-                        </button>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 mb-4">
-                    <div class="form-section">
-                        <h5><i class="fas fa-calculator"></i> Consultar Ingresos</h5>
-                        <div class="mb-3">
-                            <label class="form-label">Período (YYYY-MM)</label>
-                            <input type="text" id="periodo-busq" class="form-control" placeholder="2026-02">
-                        </div>
-                        <button onclick="verIngresos()" class="btn btn-success w-100 mb-3">
-                            <i class="fas fa-search"></i> Consultar
-                        </button>
-                        <div id="resultado-ingresos" class="alert d-none" role="alert"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB: Estado de Cuotas -->
-        <div id="contenido-estado-cuotas" class="tab-pane fade">
-            <div class="mb-3">
-                <button onclick="cargarEstadoCuotas()" class="btn btn-info w-100 mb-3">
-                    <i class="fas fa-redo"></i> Actualizar Estado
-                </button>
-            </div>
-            <div class="table-responsive" id="tabla-estado-cuotas">
-                <p class="text-muted">Cargando...</p>
-            </div>
-        </div>
-
-        <!-- TAB: Clientes Adeudados -->
-        <div id="contenido-adeudados" class="tab-pane fade">
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i> 
-                <strong>Clientes sin pago en el período actual</strong>
-            </div>
-            <div class="mb-3">
-                <button onclick="cargarClientesAdeudados()" class="btn btn-danger w-100 mb-3">
-                    <i class="fas fa-redo"></i> Cargar Adeudados
-                </button>
-            </div>
-            <div id="contenedor-adeudados">
-                <p class="text-muted">Haz clic en el botón para cargar</p>
-            </div>
-        </div>
-    </div>
-</div>
-                                </div><!-- Gestión de Cuotas -->
-<div class="row mb-4">
-    <div class="col-12">
-        <ul class="nav nav-tabs mb-3" id="tabsFinanzas" role="tablist">
-            <li class="nav-item">
-                <button class="nav-link active" id="tab-registrar-pago" data-bs-toggle="tab" data-bs-target="#contenido-registrar-pago">
-                    <i class="fas fa-cash-register"></i> Registrar Pago
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="tab-estado-cuotas" data-bs-toggle="tab" data-bs-target="#contenido-estado-cuotas">
-                    <i class="fas fa-clipboard-check"></i> Estado de Cuotas
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="tab-adeudados" data-bs-toggle="tab" data-bs-target="#contenido-adeudados">
-                    <i class="fas fa-exclamation-triangle"></i> Adeudados
-                </button>
-            </li>
-        </ul>
-
-        <div class="tab-content">
-            <!-- TAB: Registrar Pago (lo que ya tenías) -->
-            <div id="contenido-registrar-pago" class="tab-pane fade show active">
-                <div class="row">
-                    <div class="col-lg-6 mb-4">
-                        <div class="form-section">
-                            <h5><i class="fas fa-money-bill"></i> Registrar Pago</h5>
-                            <div class="mb-3">
-                                <label class="form-label">Cliente (DNI)</label>
-                                <input type="text" id="pago-dni" class="form-control" placeholder="Ej: 12345678">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Monto</label>
-                                <input type="number" id="pago-monto" class="form-control" min="1" placeholder="5000">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Período (YYYY-MM)</label>
-                                <input type="text" id="pago-periodo" class="form-control" placeholder="2026-02">
-                            </div>
-                            <button onclick="registrarPago()" class="btn btn-primary w-100">
-                                <i class="fas fa-save"></i> Registrar Pago
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 mb-4">
-                        <div class="form-section">
-                            <h5><i class="fas fa-calculator"></i> Consultar Ingresos</h5>
-                            <div class="mb-3">
-                                <label class="form-label">Período (YYYY-MM)</label>
-                                <input type="text" id="periodo-busq" class="form-control" placeholder="2026-02">
-                            </div>
-                            <button onclick="verIngresos()" class="btn btn-success w-100 mb-3">
-                                <i class="fas fa-search"></i> Consultar
-                            </button>
-                            <div id="resultado-ingresos" class="alert d-none" role="alert"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: Estado de Cuotas (NUEVO) -->
-            <div id="contenido-estado-cuotas" class="tab-pane fade">
-                <div class="mb-3">
-                    <button onclick="cargarEstadoCuotas()" class="btn btn-info w-100 mb-3">
-                        <i class="fas fa-redo"></i> Actualizar Estado
-                    </button>
-                </div>
-                <div class="table-responsive" id="tabla-estado-cuotas">
-                    <p class="text-muted">Cargando...</p>
-                </div>
-            </div>
-
-            <!-- TAB: Clientes Adeudados (NUEVO) -->
-            <div id="contenido-adeudados" class="tab-pane fade">
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i> 
-                    <strong>Clientes sin pago en el período actual</strong>
-                </div>
-                <div class="mb-3">
-                    <button onclick="cargarClientesAdeudados()" class="btn btn-danger w-100 mb-3">
-                        <i class="fas fa-redo"></i> Cargar Adeudados
-                    </button>
-                </div>
-                <div id="contenedor-adeudados">
-                    <p class="text-muted">Haz clic en el botón para cargar</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-                            </div>
-
-                            <!-- Consultar Ingresos -->
-                            <div class="col-lg-6 mb-4">
-                                <div class="form-section">
-                                    <h5><i class="fas fa-calculator"></i> Consultar Ingresos</h5>
-                                    <div class="mb-3">
-                                        <label class="form-label">Período (YYYY-MM)</label>
-                                        <input type="text" id="periodo-busq" class="form-control" placeholder="2026-02">
+                    <div id="tab-finanzas" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header bg-success text-white">
+                                        <h5 class="mb-0"><i class="fas fa-money-bill"></i> Registrar Pago</h5>
                                     </div>
-                                    <button onclick="verIngresos()" class="btn btn-success w-100 mb-3">
-                                        <i class="fas fa-search"></i> Consultar
-                                    </button>
-                                    <div id="resultado-ingresos" class="alert d-none" role="alert"></div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">DNI Cliente</label>
+                                            <input type="text" id="pago-dni" class="form-control" placeholder="12345678">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Monto</label>
+                                            <input type="number" id="pago-monto" class="form-control" placeholder="5000" min="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Período (YYYY-MM)</label>
+                                            <input type="text" id="pago-periodo" class="form-control" placeholder="2026-02">
+                                        </div>
+                                        <button onclick="registrarPago()" class="btn btn-success w-100">
+                                            <i class="fas fa-save"></i> Registrar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header bg-info text-white">
+                                        <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Ingresos</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Período (YYYY-MM)</label>
+                                            <input type="text" id="ingresos-periodo" class="form-control" placeholder="2026-02">
+                                        </div>
+                                        <button onclick="verIngresos()" class="btn btn-info w-100 mb-2">
+                                            <i class="fas fa-search"></i> Consultar
+                                        </button>
+                                        <button onclick="verIngresosActuales()" class="btn btn-primary w-100">
+                                            <i class="fas fa-calendar-check"></i> Mes Actual
+                                        </button>
+                                        <div id="resultado-ingresos" class="mt-3"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="mb-0"><i class="fas fa-list"></i> Ingresos Actuales</h5>
-                                    </div>
-                                    <div class="card-body" id="contenedor-ingresos-actuales">
-                                        <p class="text-muted">Cargando...</p>
-                                    </div>
+                    <!-- TAB: CUOTAS -->
+                    <div id="tab-cuotas" class="tab-pane fade">
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h5 class="mb-0"><i class="fas fa-credit-card"></i> Estado de Cuotas</h5>
+                            </div>
+                            <div class="card-body">
+                                <button onclick="cargarEstadoCuotas()" class="btn btn-danger btn-sm w-100 mb-3">
+                                    <i class="fas fa-sync"></i> Actualizar
+                                </button>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>DNI</th>
+                                                <th>Cliente</th>
+                                                <th>Estado</th>
+                                                <th>Monto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabla-cuotas">
+                                            <tr><td colspan="4" class="text-center text-muted">Cargando...</td></tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -698,982 +472,520 @@
             </div>
 
             <!-- PANEL CLIENTE -->
-            <div id="panel-cliente" class="oculto">
-                <!-- Nav Tabs Cliente -->
-                <ul class="nav nav-tabs mb-4" role="tablist">
+            <div id="panel-cliente" class="hidden">
+                <h3 class="mb-4"><i class="fas fa-user"></i> Panel Cliente</h3>
+
+                <ul class="nav nav-tabs mb-3" role="tablist">
                     <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-turnos-disponibles">
-                            <i class="fas fa-calendar-check"></i> Turnos Disponibles
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-turnos-cliente">
+                            <i class="fas fa-calendar"></i> Turnos Disponibles
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-mis-turnos">
-                            <i class="fas fa-bookmark"></i> Mis Turnos
+                            <i class="fas fa-check"></i> Mis Turnos
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-mi-cuota">
-                            <i class="fas fa-credit-card"></i> Mi Cuota
+                            <i class="fas fa-dollar-sign"></i> Mi Cuota
                         </button>
                     </li>
                 </ul>
 
                 <div class="tab-content">
-
-                    <!-- TAB: TURNOS DISPONIBLES -->
-                    <div id="tab-turnos-disponibles" class="tab-pane fade show active">
-                        <h5 class="mb-4"><i class="fas fa-search"></i> Turnos Disponibles para Inscribirse</h5>
-                        <div id="lista-turnos-disponibles" class="row"></div>
+                    <div id="tab-turnos-cliente" class="tab-pane fade show active">
+                        <button onclick="cargarTurnosCliente()" class="btn btn-primary mb-3 w-100">
+                            <i class="fas fa-sync"></i> Actualizar
+                        </button>
+                        <div id="lista-turnos" class="row"></div>
                     </div>
 
-                    <!-- TAB: MIS TURNOS -->
                     <div id="tab-mis-turnos" class="tab-pane fade">
-                        <h5 class="mb-4"><i class="fas fa-list"></i> Mis Inscripciones Activas</h5>
-                        <div id="lista-mis-turnos" class="row"></div>
+                        <button onclick="cargarMisTurnos()" class="btn btn-success mb-3 w-100">
+                            <i class="fas fa-sync"></i> Actualizar
+                        </button>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Hora</th>
+                                        <th>Actividad</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mis-turnos-body">
+                                    <tr><td colspan="4" class="text-center text-muted">Cargando...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <!-- TAB: MI CUOTA -->
                     <div id="tab-mi-cuota" class="tab-pane fade">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-8">
-                                <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="mb-0"><i class="fas fa-credit-card"></i> Estado de mi Cuota</h5>
-                                    </div>
-                                    <div class="card-body" id="contenedor-estado-cuota">
-                                        <p class="text-muted">Cargando...</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <button onclick="cargarMiCuota()" class="btn btn-info mb-3 w-100">
+                            <i class="fas fa-sync"></i> Actualizar
+                        </button>
+                        <div id="mi-cuota-resultado"></div>
                     </div>
-
                 </div>
             </div>
 
         </div>
     </div>
+</div>
 
-    <!-- MODALES -->
-    <!-- Modal para Editar Cliente -->
-    <div class="modal fade" id="modalEditarCliente" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-edit"></i> Editar Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="edit-cliente-id">
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" id="edit-nombre" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Apellido</label>
-                        <input type="text" id="edit-apellido" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Categoría</label>
-                        <select id="edit-categoria" class="form-select">
-                            <option value="A">Categoría A</option>
-                            <option value="B">Categoría B</option>
-                            <option value="C">Categoría C</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="guardarEdicionCliente()">
-                        <i class="fas fa-save"></i> Guardar
-                    </button>
-                </div>
-            </div>
+<!-- NOTIFICACIONES -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="toast" class="toast" role="alert">
+        <div class="toast-header" id="toast-header">
+            <strong class="me-auto">Notificación</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
         </div>
+        <div class="toast-body" id="toast-body"></div>
     </div>
+</div>
 
-    <!-- Modal para Ver Inscriptos -->
-    <div class="modal fade" id="modalInscriptos" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-users"></i> Clientes Inscriptos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="contenedor-inscriptos"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Toast de Notificaciones -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="toast-notificacion" class="toast" role="alert">
-            <div class="toast-header">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong class="me-auto">Notificación</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body" id="toast-mensaje"></div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // ============================================
-        // CONFIG Y VARIABLES GLOBALES
-        // ============================================
-        const API_URL = 'http://localhost:3000';
-        let usuario = null;
-        let clienteEditando = null;
-
-        // ============================================
-        // FUNCIONES UTILIDAD
-        // ============================================
-
-        function mostrarNotificacion(mensaje, tipo = 'info') {
-            const toast = document.getElementById('toast-notificacion');
-            const toastMensaje = document.getElementById('toast-mensaje');
-            
-            toast.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning', 'text-bg-info');
-            toast.classList.add(`text-bg-${tipo}`);
-            toastMensaje.textContent = mensaje;
-            
-            const bsToast = new bootstrap.Toast(toast);
-            bsToast.show();
-        }
-
-        async function hacerRequest(url, opciones = {}) {
-            try {
-                const respuesta = await fetch(url, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...opciones.headers
-                    },
-                    ...opciones
-                });
-
-                const datos = await respuesta.json();
-
-                if (!respuesta.ok) {
-                    mostrarNotificacion(datos.error || 'Error en la solicitud', 'danger');
-                    return null;
-                }
-
-                return datos;
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarNotificacion('Error de conexión', 'danger');
-                return null;
-            }
-        }
-
-        function formatearFecha(fecha) {
-            const opciones = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-            return new Date(fecha).toLocaleDateString('es-ES', opciones);
-        }
-
-        // ============================================
-        // AUTENTICACIÓN
-        // ============================================
-
-        async function login() {
-            const username = document.getElementById('user').value;
-            const password = document.getElementById('pass').value;
-
-            if (!username || !password) {
-                mostrarNotificacion('Por favor completa usuario y contraseña', 'warning');
-                return;
-            }
-
-            const datos = await hacerRequest(`${API_URL}/login`, {
-                method: 'POST',
-                body: JSON.stringify({ username, password })
-            });
-
-            if (datos) {
-                usuario = datos;
-                document.getElementById('seccion-login').classList.add('oculto');
-                document.getElementById('main-content').classList.remove('oculto');
-                document.getElementById('user-info').textContent = `${usuario.username} (${usuario.tipo_usuario})`;
-                document.getElementById('navbar-titulo').innerHTML = 
-                    `<i class="fas fa-dumbbell"></i> Gym System - ${usuario.tipo_usuario === 'ADMIN' ? 'Administrador' : 'Cliente'}`;
-
-                if (usuario.tipo_usuario === 'ADMIN') {
-                    document.getElementById('panel-admin').classList.remove('oculto');
-                    verClientesPorCategoria();
-                    cargarTurnos();
-                    cargarIngresoActual();
-                } else {
-                    document.getElementById('panel-cliente').classList.remove('oculto');
-                    cargarTurnosDisponibles();
-                    cargarMisTurnos();
-                    cargarEstadoCuota();
-                }
-            }
-        }
-
-        function logout() {
-            usuario = null;
-            document.getElementById('seccion-login').classList.remove('oculto');
-            document.getElementById('main-content').classList.add('oculto');
-            document.getElementById('panel-admin').classList.add('oculto');
-            document.getElementById('panel-cliente').classList.add('oculto');
-            document.getElementById('user').value = '';
-            document.getElementById('pass').value = '';
-            mostrarNotificacion('Sesión cerrada', 'info');
-        }
-
-        // ============================================
-        // ADMIN - GESTIÓN DE CLIENTES
-        // ============================================
-
-        async function crearCliente() {
-            const dni = document.getElementById('nuevo-dni').value;
-            const nombre = document.getElementById('nuevo-nombre').value;
-            const apellido = document.getElementById('nuevo-apellido').value;
-            const categoria = document.getElementById('nuevo-categoria').value;
-
-            if (!dni || !nombre || !apellido) {
-                mostrarNotificacion('Por favor completa todos los campos', 'warning');
-                return;
-            }
-
-            const datos = await hacerRequest(`${API_URL}/admin/clientes`, {
-                method: 'POST',
-                body: JSON.stringify({ dni, nombre, apellido, categoria })
-            });
-
-            if (datos) {
-                mostrarNotificacion('Cliente creado exitosamente', 'success');
-                document.getElementById('nuevo-dni').value = '';
-                document.getElementById('nuevo-nombre').value = '';
-                document.getElementById('nuevo-apellido').value = '';
-                verClientesPorCategoria();
-            }
-        }
-
-        async function verClientesPorCategoria() {
-            const categoria = document.getElementById('sel-cat').value;
-            const url = categoria ? `${API_URL}/admin/clientes/${categoria}` : `${API_URL}/admin/clientes`;
-            
-            const datos = await hacerRequest(url);
-            
-            if (datos && Array.isArray(datos)) {
-                if (datos.length === 0) {
-                    document.getElementById('contenedor-clientes').innerHTML = 
-                        '<p class="text-muted">No hay clientes para mostrar</p>';
-                    return;
-                }
-
-                const html = datos.map(cliente => `
-                    <div class="col-md-6 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title">${cliente.nombre} ${cliente.apellido}</h6>
-                                <p class="card-text small">
-                                    <strong>DNI:</strong> ${cliente.dni}<br>
-                                    <strong>Categoría:</strong> <span class="badge bg-info">${cliente.categoria}</span>
-                                </p>
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <button onclick="abrirEdicionCliente(${cliente.id_cliente}, '${cliente.nombre}', '${cliente.apellido}', '${cliente.categoria}')" 
-                                            class="btn btn-warning" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button onclick="desactivarCliente(${cliente.id_cliente})" class="btn btn-danger" title="Desactivar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('contenedor-clientes').innerHTML = 
-                    `<div class="row">${html}</div>`;
-            }
-        }
-
-        async function buscarClientePorDNI() {
-            const dni = document.getElementById('buscar-dni').value;
-
-            if (!dni) {
-                mostrarNotificacion('Por favor ingresa un DNI', 'warning');
-                return;
-            }
-
-            const datos = await hacerRequest(`${API_URL}/admin/cliente-dni/${dni}`);
-
-            if (datos) {
-                const html = `
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0">${datos.nombre} ${datos.apellido}</h5>
-                                </div>
-                                <div class="card-body">
-                                    <p><strong>DNI:</strong> ${datos.dni}</p>
-                                    <p><strong>Categoría:</strong> <span class="badge bg-info">${datos.categoria}</span></p>
-                                    <p><strong>Pagos Realizados:</strong> ${datos.pagos_realizados}</p>
-                                    <p><strong>Total Pagado:</strong> $${datos.total_pagado || 0}</p>
-                                    <h6>Historial de Pagos:</h6>
-                                    <div class="small text-muted">
-                                        ${datos.historial_pagos ? 
-                                            datos.historial_pagos.split('|').map(p => `<div>• ${p}</div>`).join('') 
-                                            : 'Sin pagos registrados'}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('contenedor-clientes').innerHTML = html;
-            }
-        }
-
-        function abrirEdicionCliente(id, nombre, apellido, categoria) {
-            clienteEditando = id;
-            document.getElementById('edit-cliente-id').value = id;
-            document.getElementById('edit-nombre').value = nombre;
-            document.getElementById('edit-apellido').value = apellido;
-            document.getElementById('edit-categoria').value = categoria;
-            
-            const modal = new bootstrap.Modal(document.getElementById('modalEditarCliente'));
-            modal.show();
-        }
-
-        async function guardarEdicionCliente() {
-            const id = document.getElementById('edit-cliente-id').value;
-            const nombre = document.getElementById('edit-nombre').value;
-            const apellido = document.getElementById('edit-apellido').value;
-            const categoria = document.getElementById('edit-categoria').value;
-
-            if (!nombre || !apellido) {
-                mostrarNotificacion('Por favor completa todos los campos', 'warning');
-                return;
-            }
-
-            const datos = await hacerRequest(`${API_URL}/admin/clientes/${id}`, {
-                method: 'PUT',
-                body: JSON.stringify({ nombre, apellido, categoria })
-            });
-
-            if (datos) {
-                mostrarNotificacion('Cliente actualizado exitosamente', 'success');
-                bootstrap.Modal.getInstance(document.getElementById('modalEditarCliente')).hide();
-                verClientesPorCategoria();
-            }
-        }
-
-        async function desactivarCliente(id) {
-            if (!confirm('¿Estás seguro de que deseas desactivar este cliente?')) return;
-
-            const datos = await hacerRequest(`${API_URL}/admin/clientes/${id}`, {
-                method: 'DELETE'
-            });
-
-            if (datos) {
-                mostrarNotificacion('Cliente desactivado exitosamente', 'success');
-                verClientesPorCategoria();
-            }
-        }
-
-        // ============================================
-        // ADMIN - GESTIÓN DE TURNOS
-        // ============================================
-
-        async function crearTurno() {
-            const fecha = document.getElementById('turno-fecha').value;
-            const hora = document.getElementById('turno-hora').value;
-            const actividad = document.getElementById('turno-actividad').value;
-            const cupo_maximo = parseInt(document.getElementById('turno-cupo').value);
-
-            if (!fecha || !hora || !actividad || !cupo_maximo) {
-                mostrarNotificacion('Por favor completa todos los campos', 'warning');
-                return;
-            }
-
-            const horaFormato = `${hora}:00`;
-
-            const datos = await hacerRequest(`${API_URL}/admin/turnos`, {
-                method: 'POST',
-                body: JSON.stringify({ fecha, hora: horaFormato, actividad, cupo_maximo })
-            });
-
-            if (datos) {
-                mostrarNotificacion('Turno creado exitosamente', 'success');
-                document.getElementById('turno-fecha').value = '';
-                document.getElementById('turno-hora').value = '';
-                document.getElementById('turno-actividad').value = '';
-                cargarTurnos();
-            }
-        }
-
-        async function cargarTurnos() {
-            const datos = await hacerRequest(`${API_URL}/admin/turnos`);
-
-            if (datos && Array.isArray(datos)) {
-                const html = datos.map(turno => `
-                    <div class="col-md-6 mb-3">
-                        <div class="card turno-card ${turno.cupo_disponible === 0 ? 'completo' : ''}">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title">${turno.actividad}</h6>
-                                        <p class="card-text small">
-                                            <strong>📅</strong> ${formatearFecha(turno.fecha)}<br>
-                                            <strong>🕒</strong> ${turno.hora.substring(0, 5)}<br>
-                                            <strong>👥</strong> Inscriptos: ${turno.inscriptos}/${turno.cupo_maximo}
-                                        </p>
-                                    </div>
-                                    <span class="badge ${turno.cupo_disponible === 0 ? 'bg-danger' : 'bg-success'}">
-                                        ${turno.cupo_disponible} cupos
-                                    </span>
-                                </div>
-                                <div class="estado-ocupacion mt-2">
-                                    <div class="barra-ocupacion">
-                                        <div class="barra-ocupacion-relleno" style="width: ${(turno.inscriptos / turno.cupo_maximo * 100)}%"></div>
-                                    </div>
-                                    <small>${Math.round(turno.inscriptos / turno.cupo_maximo * 100)}%</small>
-                                </div>
-                                <div class="btn-group btn-group-sm mt-3 w-100" role="group">
-                                    <button onclick="verInscriptos(${turno.id_turno})" class="btn btn-info" title="Ver inscriptos">
-                                        <i class="fas fa-users"></i> Ver
-                                    </button>
-                                    <button onclick="cancelarTurno(${turno.id_turno})" class="btn btn-danger" title="Cancelar turno">
-                                        <i class="fas fa-ban"></i> Cancelar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('contenedor-turnos').innerHTML = html.length > 0 ? 
-                    `<div class="row">${html}</div>` : 
-                    '<p class="text-muted">No hay turnos creados</p>';
-            }
-        }
-
-        async function verInscriptos(turnoId) {
-            const datos = await hacerRequest(`${API_URL}/admin/turnos/${turnoId}/inscriptos`);
-
-            if (datos && Array.isArray(datos)) {
-                const html = datos.length > 0 ? 
-                    `<table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>DNI</th>
-                                <th>Nombre</th>
-                                <th>Categoría</th>
-                                <th>Actividad</th>
-                                <th>Hora</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${datos.map(d => `
-                                <tr>
-                                    <td>${d.dni}</td>
-                                    <td>${d.nombre} ${d.apellido}</td>
-                                    <td><span class="badge bg-info">${d.categoria}</span></td>
-                                    <td>${d.actividad}</td>
-                                    <td>${d.hora.substring(0, 5)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>` :
-                    '<p class="text-muted">No hay inscriptos</p>';
-
-                document.getElementById('contenedor-inscriptos').innerHTML = html;
-                const modal = new bootstrap.Modal(document.getElementById('modalInscriptos'));
-                modal.show();
-            }
-        }
-
-        async function cancelarTurno(turnoId) {
-            if (!confirm('¿Deseas cancelar este turno? Se cancelarán todas las inscripciones.')) return;
-
-            const datos = await hacerRequest(`${API_URL}/admin/turnos/${turnoId}/cancelar`, {
-                method: 'PUT'
-            });
-
-            if (datos) {
-                mostrarNotificacion('Turno cancelado exitosamente', 'success');
-                cargarTurnos();
-            }
-        }
-
-        async function cargarReporteOcupacion() {
-            const datos = await hacerRequest(`${API_URL}/admin/reporte-ocupacion`);
-
-            if (datos && Array.isArray(datos)) {
-                const html = datos.map(t => `
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <strong>${t.actividad} - ${t.fecha}</strong>
-                            <small>${t.porcentaje_ocupacion}%</small>
-                        </div>
-                        <div class="progress" style="height: 25px;">
-                            <div class="progress-bar" style="width: ${t.porcentaje_ocupacion}%; background-color: var(--accent);">
-                                ${t.inscriptos}/${t.cupo_maximo}
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('contenedor-reporte-ocupacion').innerHTML = html || 
-                    '<p class="text-muted">Sin datos</p>';
-            }
-        }
-
-        // ============================================
-        // ADMIN - GESTIÓN FINANCIERA
-        // ============================================
-
-        async function registrarPago() {
-            const dni = document.getElementById('pago-dni').value;
-            const monto = parseInt(document.getElementById('pago-monto').value);
-            const periodo = document.getElementById('pago-periodo').value;
-
-            if (!dni || !monto || !periodo) {
-                mostrarNotificacion('Por favor completa todos los campos', 'warning');
-                return;
-            }
-
-            // Primero obtener el cliente por DNI
-            const cliente = await hacerRequest(`${API_URL}/admin/cliente-dni/${dni}`);
-            if (!cliente) return;
-
-            const datos = await hacerRequest(`${API_URL}/admin/pagos`, {
-                method: 'POST',
-                body: JSON.stringify({ 
-                    id_cliente: cliente.id_cliente, 
-                    monto, 
-                    periodo 
-                })
-            });
-
-            if (datos) {
-                mostrarNotificacion('Pago registrado exitosamente', 'success');
-                document.getElementById('pago-dni').value = '';
-                document.getElementById('pago-monto').value = '';
-                document.getElementById('pago-periodo').value = '';
-                cargarIngresoActual();
-            }
-        }
-
-        async function verIngresos() {
-            const periodo = document.getElementById('periodo-busq').value;
-
-            if (!periodo || !/^\d{4}-\d{2}$/.test(periodo)) {
-                mostrarNotificacion('Formato inválido (YYYY-MM)', 'warning');
-                return;
-            }
-
-            const datos = await hacerRequest(`${API_URL}/admin/ingresos/${periodo}`);
-
-            if (datos) {
-                const resultDiv = document.getElementById('resultado-ingresos');
-                resultDiv.classList.remove('d-none');
-                resultDiv.classList.remove('alert-danger', 'alert-success');
-                resultDiv.classList.add('alert-success');
-                resultDiv.innerHTML = `
-                    <h5>Período: ${periodo}</h5>
-                    <h3 class="text-success">Total: $${datos.total || 0}</h3>
-                `;
-            }
-        }
-
-        async function cargarIngresoActual() {
-            const datos = await hacerRequest(`${API_URL}/admin/ingresos-actuales`);
-
-            if (datos) {
-                document.getElementById('contenedor-ingresos-actuales').innerHTML = `
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="alert alert-info">
-                                <h6>Período Actual</h6>
-                                <h4 class="text-primary">${datos.periodo}</h4>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="alert alert-success">
-                                <h6>Ingresos Totales</h6>
-                                <h4 class="text-success">$${datos.total || 0}</h4>
-                                <small>${datos.cantidad_pagos} pagos</small>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // ============================================
-        // CLIENTE - TURNOS Y CUOTA
-        // ============================================
-
-        async function cargarTurnosDisponibles() {
-            const datos = await hacerRequest(`${API_URL}/turnos`);
-
-            if (datos && Array.isArray(datos)) {
-                const html = datos.map(turno => `
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card turno-card ${turno.cupo_disponible === 0 ? 'completo' : ''}">
-                            <div class="card-body">
-                                <h6 class="card-title">${turno.actividad}</h6>
-                                <p class="card-text small">
-                                    <strong>📅</strong> ${formatearFecha(turno.fecha)}<br>
-                                    <strong>🕒</strong> ${turno.hora.substring(0, 5)} hs<br>
-                                    <strong>ℹ️</strong> ${turno.descripcion}
-                                </p>
-                                <div class="estado-ocupacion mb-2">
-                                    <div class="barra-ocupacion">
-                                        <div class="barra-ocupacion-relleno" style="width: ${(turno.inscriptos / turno.cupo_maximo * 100)}%"></div>
-                                    </div>
-                                    <small>${turno.cupo_disponible} cupos</small>
-                                </div>
-                                <span class="badge ${turno.estado_cupo === 'DISPONIBLE' ? 'bg-success' : (turno.estado_cupo === 'CASI LLENO' ? 'bg-warning' : 'bg-danger')}">
-                                    ${turno.estado_cupo}
-                                </span>
-                                <button onclick="inscribirse(${turno.id_turno})" 
-                                        class="btn btn-primary btn-sm w-100 mt-2"
-                                        ${turno.cupo_disponible === 0 ? 'disabled' : ''}>
-                                    <i class="fas fa-check"></i> Inscribirse
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('lista-turnos-disponibles').innerHTML = html.length > 0 ? 
-                    html : 
-                    '<div class="col-12"><p class="alert alert-info">No hay turnos disponibles</p></div>';
-            }
-        }
-
-        async function inscribirse(turnoId) {
-            if (!usuario || !usuario.id_cliente) {
-                mostrarNotificacion('No estás autenticado como cliente', 'danger');
-                return;
-            }
-
-            const datos = await hacerRequest(`${API_URL}/inscribirse`, {
-                method: 'POST',
-                body: JSON.stringify({ 
-                    id_cliente: usuario.id_cliente, 
-                    id_turno: turnoId
-                })
-            });
-
-            if (datos) {
-                mostrarNotificacion('¡Inscripción confirmada!', 'success');
-                cargarTurnosDisponibles();
-                cargarMisTurnos();
-            }
-        }
-
-        async function cargarMisTurnos() {
-            if (!usuario || !usuario.id_cliente) return;
-
-            const datos = await hacerRequest(`${API_URL}/cliente/${usuario.id_cliente}/mis-turnos`);
-
-            if (datos && Array.isArray(datos)) {
-                const html = datos.map(turno => `
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title">${turno.actividad}</h6>
-                                <p class="card-text small">
-                                    <strong>📅</strong> ${formatearFecha(turno.fecha)}<br>
-                                    <strong>🕒</strong> ${turno.hora.substring(0, 5)} hs<br>
-                                    <strong>ℹ️</strong> ${turno.descripcion}
-                                </p>
-                                <span class="badge bg-success">INSCRIPTO</span>
-                                <button onclick="cancelarInscripcion(${turno.id_inscripcion})" 
-                                        class="btn btn-danger btn-sm w-100 mt-2">
-                                    <i class="fas fa-times"></i> Cancelar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.getElementById('lista-mis-turnos').innerHTML = html.length > 0 ? 
-                    html : 
-                    '<div class="col-12"><p class="alert alert-info">No estás inscripto en ningún turno</p></div>';
-            }
-        }
-
-        async function cancelarInscripcion(inscripcionId) {
-            if (!confirm('¿Deseas cancelar tu inscripción?')) return;
-
-            const datos = await hacerRequest(`${API_URL}/cliente/${usuario.id_cliente}/inscripciones/${inscripcionId}`, {
-                method: 'DELETE'
-            });
-
-            if (datos) {
-                mostrarNotificacion('Inscripción cancelada', 'success');
-                cargarMisTurnos();
-                cargarTurnosDisponibles();
-            }
-        }
-
-        async function cargarEstadoCuota() {
-            if (!usuario || !usuario.id_cliente) return;
-
-            const datos = await hacerRequest(`${API_URL}/cliente/${usuario.id_cliente}/estado-cuota`);
-
-            if (datos) {
-                const esPagado = datos.estado === 'PAGADO';
-                const html = `
-                    <div class="alert ${esPagado ? 'alert-success' : 'alert-danger'}" role="alert">
-                        <h5 class="alert-heading">
-                            ${esPagado ? '✅ Cuota Pagada' : '❌ Cuota Adeudada'}
-                        </h5>
-                        <hr>
-                        <p><strong>Período:</strong> ${datos.periodo_actual}</p>
-                        ${esPagado ? `
-                            <p><strong>Monto Pagado:</strong> $${datos.monto_pagado}</p>
-                            <p><strong>Fecha de Pago:</strong> ${formatearFecha(datos.fecha_pago)}</p>
-                        ` : `
-                            <p class="mb-0"><strong>Debes pagar tu cuota para poder inscribirte en turnos</strong></p>
-                        `}
-                    </div>
-                `;
-
-                document.getElementById('contenedor-estado-cuota').innerHTML = html;
-            }
-        }
-
+<script>
+    const API_URL = 'http://localhost:3000';
+    let usuario = null;
 // ============================================
-// GESTIÓN DE CUOTAS (NUEVO)
+// REGISTRO DE USUARIOS
 // ============================================
 
-async function cargarEstadoCuotas() {
-    const datos = await hacerRequest(`${API_URL}/admin/clientes-estado-cuota`);
-
-    if (datos && Array.isArray(datos)) {
-        let html = `
-            <table class="table table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>DNI</th>
-                        <th>Cliente</th>
-                        <th>Categoría</th>
-                        <th>Estado Cuota</th>
-                        <th>Monto Pagado</th>
-                        <th>Fecha Pago</th>
-                        <th>Turnos</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
-
-        datos.forEach(cliente => {
-            const estadoBadge = cliente.estado_cuota === 'PAGADO' 
-                ? '<span class="badge bg-success">PAGADO</span>'
-                : '<span class="badge bg-danger">ADEUDADO</span>';
-
-            html += `
-                <tr>
-                    <td><strong>${cliente.dni}</strong></td>
-                    <td>${cliente.nombre} ${cliente.apellido}</td>
-                    <td><span class="badge bg-info">${cliente.categoria}</span></td>
-                    <td>${estadoBadge}</td>
-                    <td>${cliente.monto_pagado ? '$' + cliente.monto_pagado : '-'}</td>
-                    <td>${cliente.fecha_pago ? formatearFecha(cliente.fecha_pago) : '-'}</td>
-                    <td><span class="badge bg-primary">${cliente.turnos_inscriptos}</span></td>
-                    <td>
-                        <div class="btn-group btn-group-sm" role="group">
-                            ${cliente.estado_cuota === 'ADEUDADO' 
-                                ? `<button onclick="abrirProcesarCuota(${cliente.id_cliente}, '${cliente.nombre}', '${cliente.apellido}')" class="btn btn-warning" title="Procesar Cuota">
-                                    <i class="fas fa-credit-card"></i>
-                                  </button>` 
-                                : ''}
-                            <button onclick="abrirModalDetallesCuota(${cliente.id_cliente}, '${cliente.nombre}', '${cliente.apellido}')" class="btn btn-info" title="Ver Detalles">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-
-        html += `
-                </tbody>
-            </table>
-        `;
-
-        document.getElementById('tabla-estado-cuotas').innerHTML = html;
-    }
+function mostrarRegistro() {
+    document.getElementById('form-login').style.display = 'none';
+    document.getElementById('form-registro-container').classList.remove('hidden');
 }
 
-async function cargarClientesAdeudados() {
-    const datos = await hacerRequest(`${API_URL}/admin/clientes-adeudados`);
-
-    if (datos && Array.isArray(datos)) {
-        if (datos.length === 0) {
-            document.getElementById('contenedor-adeudados').innerHTML = 
-                '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Todos los clientes están al día!</div>';
-            return;
-        }
-
-        let html = `<div class="row">`;
-
-        datos.forEach(cliente => {
-            const estadoActivo = cliente.activo === 1 
-                ? '<span class="badge bg-success">ACTIVO</span>'
-                : '<span class="badge bg-secondary">INACTIVO</span>';
-
-            html += `
-                <div class="col-md-6 mb-3">
-                    <div class="card border-danger">
-                        <div class="card-header bg-danger text-white">
-                            <h6 class="mb-0">
-                                <i class="fas fa-user"></i> ${cliente.nombre} ${cliente.apellido}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-1"><strong>DNI:</strong> ${cliente.dni}</p>
-                            <p class="mb-1"><strong>Categoría:</strong> <span class="badge bg-info">${cliente.categoria}</span></p>
-                            <p class="mb-1"><strong>Estado:</strong> ${estadoActivo}</p>
-                            <p class="mb-2"><strong>Días adeudado:</strong> <span class="badge bg-warning">${cliente.dias_adeudado} días</span></p>
-                            <p class="mb-2"><strong>Turnos inscriptos:</strong> ${cliente.turnos_inscriptos}</p>
-                            <div class="btn-group w-100" role="group">
-                                <button onclick="abrirProcesarCuotaRapido(${cliente.id_cliente}, '${cliente.nombre} ${cliente.apellido}')" class="btn btn-success btn-sm">
-                                    <i class="fas fa-check"></i> Procesar Pago
-                                </button>
-                                <button onclick="abrirBajaCliente(${cliente.id_cliente}, '${cliente.nombre} ${cliente.apellido}')" class="btn btn-danger btn-sm">
-                                    <i class="fas fa-ban"></i> Dar de Baja
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-
-        html += `</div>`;
-        document.getElementById('contenedor-adeudados').innerHTML = html;
-    }
+function volverLogin() {
+    document.getElementById('form-login').style.display = 'block';
+    document.getElementById('form-registro-container').classList.add('hidden');
+    document.getElementById('form-registro').reset();
 }
 
-function abrirProcesarCuota(clienteId, nombre, apellido) {
-    document.getElementById('procesar-cuota-id').value = clienteId;
-    document.getElementById('procesar-cuota-nombre').textContent = `${nombre} ${apellido}`;
-    document.getElementById('procesar-cuota-monto').value = '5000';
-    
-    const hoy = new Date();
-    const periodo = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
-    document.getElementById('procesar-cuota-periodo').value = periodo;
+async function registro(e) {
+    e.preventDefault();
 
-    const modal = new bootstrap.Modal(document.getElementById('modalProcesarCuota'));
-    modal.show();
-}
+    const nombre = document.getElementById('reg-nombre').value;
+    const apellido = document.getElementById('reg-apellido').value;
+    const dni = document.getElementById('reg-dni').value;
+    const telefono = document.getElementById('reg-telefono').value;
+    const email = document.getElementById('reg-email').value;
+    const categoria = document.getElementById('reg-categoria').value;
+    const username = document.getElementById('reg-usuario').value;
+    const password = document.getElementById('reg-password').value;
+    const password_confirm = document.getElementById('reg-password-confirm').value;
 
-function abrirProcesarCuotaRapido(clienteId, nombreCompleto) {
-    abrirProcesarCuota(clienteId, nombreCompleto.split(' ')[0], nombreCompleto.split(' ').slice(1).join(' '));
-}
-
-async function procesarCuota() {
-    const clienteId = document.getElementById('procesar-cuota-id').value;
-    const monto = parseFloat(document.getElementById('procesar-cuota-monto').value);
-    const periodo = document.getElementById('procesar-cuota-periodo').value;
-
-    if (!clienteId || !monto || !periodo) {
-        mostrarNotificacion('Por favor completa todos los campos', 'warning');
+    // Validaciones básicas
+    if (password.length < 4) {
+        notif('La contraseña debe tener al menos 4 caracteres', 'warning');
         return;
     }
 
-    const datos = await hacerRequest(`${API_URL}/admin/procesar-cuota/${clienteId}`, {
+    if (password !== password_confirm) {
+        notif('Las contraseñas no coinciden', 'warning');
+        return;
+    }
+
+    if (dni.length < 5) {
+        notif('DNI inválido', 'warning');
+        return;
+    }
+
+    const data = await api(`${API_URL}/registro`, {
         method: 'POST',
-        body: JSON.stringify({ monto, periodo })
+        body: {
+            nombre,
+            apellido,
+            dni,
+            telefono,
+            email,
+            categoria,
+            username,
+            password,
+            password_confirm
+        }
     });
 
-    if (datos) {
-        mostrarNotificacion(`Cuota procesada: $${monto}`, 'success');
-        bootstrap.Modal.getInstance(document.getElementById('modalProcesarCuota')).hide();
-        cargarEstadoCuotas();
-        cargarClientesAdeudados();
+    if (data) {
+        notif('¡Cuenta creada exitosamente! Ahora puedes loguearte', 'success');
+        document.getElementById('form-registro').reset();
+        
+        // Cargar datos automáticamente en el login
+        document.getElementById('user').value = username;
+        document.getElementById('pass').value = password;
+        
+        volverLogin();
+
+        // Mensaje de bienvenida
+        setTimeout(() => {
+            notif('Por favor, inicia sesión con tus credenciales', 'info');
+        }, 1000);
     }
 }
-
-function abrirBajaCliente(clienteId, nombreCompleto) {
-    if (!confirm(`¿Deseas dar de baja a ${nombreCompleto} por cuota adeudada?`)) return;
-
-    const motivo = 'Cuota adeudada';
-    bajaClientePorCuota(clienteId, motivo);
-}
-
-async function bajaClientePorCuota(clienteId, motivo) {
-    const datos = await hacerRequest(`${API_URL}/admin/baja-por-cuota/${clienteId}`, {
-        method: 'POST',
-        body: JSON.stringify({ motivo })
-    });
-
-    if (datos) {
-        mostrarNotificacion('Cliente dado de baja por cuota adeudada', 'success');
-        cargarClientesAdeudados();
-        cargarEstadoCuotas();
-    }
-}
-
-function abrirModalDetallesCuota(clienteId, nombre, apellido) {
-    document.getElementById('detalles-cuota-nombre').textContent = `${nombre} ${apellido}`;
-    document.getElementById('detalles-cuota-id').value = clienteId;
-    
-    const modal = new bootstrap.Modal(document.getElementById('modalDetallesCuota'));
-    modal.show();
-}
-
-async function reactivarCliente() {
-    const clienteId = document.getElementById('detalles-cuota-id').value;
-
-    if (!confirm('¿Deseas reactivar este cliente?')) return;
-
-    const datos = await hacerRequest(`${API_URL}/admin/reactivar-cliente/${clienteId}`, {
-        method: 'POST',
-        body: JSON.stringify({})
-    });
-
-    if (datos) {
-        mostrarNotificacion('Cliente reactivado correctamente', 'success');
-        bootstrap.Modal.getInstance(document.getElementById('modalDetallesCuota')).hide();
-        cargarEstadoCuotas();
-        cargarClientesAdeudados();
-    }
-}
-        // ============================================
-        // INICIALIZACIÓN
-        // ============================================
-
-        document.getElementById('pass').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') login();
-        });
-
-        // Cargar datos al entrar en tabs (delegado a clicks en botones de tab)
-        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                setTimeout(() => {
-                    if (this.getAttribute('data-bs-target') === '#tab-clientes') {
-                        verClientesPorCategoria();
-                    } else if (this.getAttribute('data-bs-target') === '#tab-turnos') {
-                        cargarTurnos();
-                        cargarReporteOcupacion();
-                    } else if (this.getAttribute('data-bs-target') === '#tab-turnos-disponibles') {
-                        cargarTurnosDisponibles();
-                    } else if (this.getAttribute('data-bs-target') === '#tab-mis-turnos') {
-                        cargarMisTurnos();
-                    } else if (this.getAttribute('data-bs-target') === '#tab-mi-cuota') {
-                        cargarEstadoCuota();
-                    }
-                }, 100);
+    // FUNCIONES UTILIDAD
+    async function api(url, options = {}) {
+        try {
+            const response = await fetch(url, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                body: options.body ? JSON.stringify(options.body) : undefined
             });
+
+            if (!response.ok) {
+                const error = await response.json();
+                notif(error.error || 'Error', 'danger');
+                return null;
+            }
+
+            return await response.json();
+        } catch (err) {
+            notif('Error: ' + err.message, 'danger');
+            return null;
+        }
+    }
+
+    function notif(msg, tipo = 'info') {
+        const toast = new bootstrap.Toast(document.getElementById('toast'));
+        document.getElementById('toast-header').textContent = tipo.toUpperCase();
+        document.getElementById('toast-body').textContent = msg;
+        document.getElementById('toast').className = 'toast text-bg-' + tipo;
+        toast.show();
+    }
+
+    function formatDate(d) {
+        return new Date(d).toLocaleDateString('es-ES');
+    }
+
+    // LOGIN
+    async function login(e) {
+        e.preventDefault();
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
+
+        if (!user || !pass) {
+            notif('Completa usuario y contraseña', 'warning');
+            return;
+        }
+
+        const data = await api(`${API_URL}/login`, {
+            method: 'POST',
+            body: { username: user, password: pass }
         });
-    </script>
+
+        if (data) {
+            usuario = data;
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('navbar').classList.remove('hidden');
+            document.getElementById('panel-principal').classList.remove('hidden');
+            document.getElementById('usuario-nombre').textContent = data.username;
+
+            if (data.tipo_usuario === 'ADMIN') {
+                document.getElementById('panel-admin').classList.remove('hidden');
+                document.getElementById('panel-cliente').classList.add('hidden');
+                verTodosClientes();
+                cargarTurnosAdmin();
+                cargarEstadoCuotas();
+            } else {
+                document.getElementById('panel-admin').classList.add('hidden');
+                document.getElementById('panel-cliente').classList.remove('hidden');
+                cargarTurnosCliente();
+                cargarMisTurnos();
+                cargarMiCuota();
+            }
+
+            notif('¡Bienvenido ' + data.username + '!', 'success');
+        }
+    }
+
+    function logout() {
+        usuario = null;
+        document.getElementById('login-section').classList.remove('hidden');
+        document.getElementById('navbar').classList.add('hidden');
+        document.getElementById('panel-principal').classList.add('hidden');
+        document.getElementById('user').value = '';
+        document.getElementById('pass').value = '';
+        notif('Sesión cerrada', 'info');
+    }
+
+    // CLIENTES
+    async function crearCliente() {
+        const dni = document.getElementById('cliente-dni').value;
+        const nombre = document.getElementById('cliente-nombre').value;
+        const apellido = document.getElementById('cliente-apellido').value;
+        const categoria = document.getElementById('cliente-categoria').value;
+        const telefono = document.getElementById('cliente-telefono').value;
+        const email = document.getElementById('cliente-email').value;
+
+        if (!dni || !nombre || !apellido) {
+            notif('Completa DNI, nombre y apellido', 'warning');
+            return;
+        }
+
+        const data = await api(`${API_URL}/admin/clientes`, {
+            method: 'POST',
+            body: { dni, nombre, apellido, categoria, telefono, email }
+        });
+
+        if (data) {
+            notif('Cliente creado exitosamente', 'success');
+            document.getElementById('cliente-dni').value = '';
+            document.getElementById('cliente-nombre').value = '';
+            document.getElementById('cliente-apellido').value = '';
+            document.getElementById('cliente-telefono').value = '';
+            document.getElementById('cliente-email').value = '';
+            verTodosClientes();
+        }
+    }
+
+    async function verTodosClientes() {
+        const data = await api(`${API_URL}/admin/clientes`);
+        if (data) {
+            let html = '';
+            data.forEach(c => {
+                html += `<tr>
+                    <td>${c.dni}</td>
+                    <td>${c.nombre} ${c.apellido}</td>
+                    <td>${c.telefono || '-'}</td>
+                    <td><button onclick="eliminarCliente(${c.id_cliente})" class="btn btn-danger btn-sm btn-action"><i class="fas fa-trash"></i></button></td>
+                </tr>`;
+            });
+            document.getElementById('tabla-clientes').innerHTML = html;
+        }
+    }
+
+    async function filtrarClientes(cat) {
+        const data = await api(`${API_URL}/admin/clientes/${cat}`);
+        if (data) {
+            let html = '';
+            data.forEach(c => {
+                html += `<tr>
+                    <td>${c.dni}</td>
+                    <td>${c.nombre} ${c.apellido}</td>
+                    <td>${c.telefono || '-'}</td>
+                    <td><button onclick="eliminarCliente(${c.id_cliente})" class="btn btn-danger btn-sm btn-action"><i class="fas fa-trash"></i></button></td>
+                </tr>`;
+            });
+            document.getElementById('tabla-clientes').innerHTML = html;
+        }
+    }
+
+    async function eliminarCliente(id) {
+        if (!confirm('¿Deseas dar de baja a este cliente?')) return;
+        const data = await api(`${API_URL}/admin/clientes/${id}`, { method: 'DELETE', body: {} });
+        if (data) {
+            notif('Cliente dado de baja', 'success');
+            verTodosClientes();
+        }
+    }
+
+    // TURNOS
+    async function crearTurno() {
+        const fecha = document.getElementById('turno-fecha').value;
+        const hora = document.getElementById('turno-hora').value;
+        const actividad = document.getElementById('turno-actividad').value;
+        const cupo = parseInt(document.getElementById('turno-cupo').value);
+
+        if (!fecha || !hora || !actividad || !cupo) {
+            notif('Completa todos los campos', 'warning');
+            return;
+        }
+
+        const data = await api(`${API_URL}/admin/turnos`, {
+            method: 'POST',
+            body: { fecha, hora: hora + ':00', actividad, cupo_maximo: cupo }
+        });
+
+        if (data) {
+            notif('Turno creado exitosamente', 'success');
+            document.getElementById('turno-fecha').value = '';
+            document.getElementById('turno-hora').value = '';
+            document.getElementById('turno-actividad').value = '';
+            document.getElementById('turno-cupo').value = '';
+            cargarTurnosAdmin();
+        }
+    }
+
+    async function cargarTurnosAdmin() {
+        const data = await api(`${API_URL}/admin/turnos`);
+        if (data) {
+            let html = '';
+            data.forEach(t => {
+                html += `<tr>
+                    <td>${formatDate(t.fecha)}</td>
+                    <td>${t.hora.substring(0, 5)}</td>
+                    <td>${t.actividad}</td>
+                    <td>${t.inscriptos}/${t.cupo_maximo}</td>
+                </tr>`;
+            });
+            document.getElementById('tabla-turnos').innerHTML = html;
+        }
+    }
+
+    // FINANZAS
+    async function registrarPago() {
+        const dni = document.getElementById('pago-dni').value;
+        const monto = parseFloat(document.getElementById('pago-monto').value);
+        const periodo = document.getElementById('pago-periodo').value;
+
+        if (!dni || !monto || !periodo) {
+            notif('Completa todos los campos', 'warning');
+            return;
+        }
+
+        const cliente = await api(`${API_URL}/admin/cliente-dni/${dni}`);
+        if (!cliente) {
+            notif('Cliente no encontrado', 'danger');
+            return;
+        }
+
+        const data = await api(`${API_URL}/admin/pagos`, {
+            method: 'POST',
+            body: { id_cliente: cliente.id_cliente, monto, periodo }
+        });
+
+        if (data) {
+            notif('Pago registrado exitosamente', 'success');
+            document.getElementById('pago-dni').value = '';
+            document.getElementById('pago-monto').value = '';
+            document.getElementById('pago-periodo').value = '';
+        }
+    }
+
+    async function verIngresos() {
+        const periodo = document.getElementById('ingresos-periodo').value;
+        if (!periodo) {
+            notif('Ingresa un período', 'warning');
+            return;
+        }
+
+        const data = await api(`${API_URL}/admin/ingresos/${periodo}`);
+        if (data) {
+            const html = `<div class="alert alert-info">
+                <strong>Período:</strong> ${data.periodo}<br>
+                <strong>Total:</strong> $${data.total || 0}
+            </div>`;
+            document.getElementById('resultado-ingresos').innerHTML = html;
+        }
+    }
+
+    async function verIngresosActuales() {
+        const data = await api(`${API_URL}/admin/ingresos-actuales`);
+        if (data) {
+            const html = `<div class="alert alert-success">
+                <strong>Período Actual:</strong> ${data.periodo}<br>
+                <strong>Total:</strong> $${data.total || 0}<br>
+                <strong>Pagos:</strong> ${data.cantidad_pagos || 0}
+            </div>`;
+            document.getElementById('resultado-ingresos').innerHTML = html;
+        }
+    }
+
+    // CUOTAS
+    async function cargarEstadoCuotas() {
+        const data = await api(`${API_URL}/admin/clientes-estado-cuota`);
+        if (data) {
+            let html = '';
+            data.forEach(c => {
+                const estado = c.estado_cuota === 'PAGADO'
+                    ? '<span class="estado-badge estado-pagado">PAGADO</span>'
+                    : '<span class="estado-badge estado-adeudado">ADEUDADO</span>';
+                html += `<tr>
+                    <td>${c.dni}</td>
+                    <td>${c.nombre}</td>
+                    <td>${estado}</td>
+                    <td>${c.monto_pagado || '-'}</td>
+                </tr>`;
+            });
+            document.getElementById('tabla-cuotas').innerHTML = html;
+        }
+    }
+
+    // CLIENTE - TURNOS
+    async function cargarTurnosCliente() {
+        const data = await api(`${API_URL}/turnos`);
+        if (data) {
+            let html = '';
+            data.forEach(t => {
+                html += `<div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <strong>${t.actividad}</strong>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Fecha:</strong> ${formatDate(t.fecha)}</p>
+                            <p class="mb-1"><strong>Hora:</strong> ${t.hora.substring(0, 5)}</p>
+                            <p class="mb-2"><strong>Cupos:</strong> ${t.cupo_disponible}/${t.cupo_maximo}</p>
+                            <button onclick="inscribirse(${t.id_turno})" class="btn btn-success w-100 btn-sm">
+                                <i class="fas fa-check"></i> Inscribirse
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('lista-turnos').innerHTML = html;
+        }
+    }
+
+    async function inscribirse(id) {
+        const data = await api(`${API_URL}/inscribirse`, {
+            method: 'POST',
+            body: { id_cliente: usuario.id_cliente, id_turno: id }
+        });
+
+        if (data) {
+            notif('¡Inscripción confirmada!', 'success');
+            cargarMisTurnos();
+            cargarTurnosCliente();
+        }
+    }
+
+    async function cargarMisTurnos() {
+        const data = await api(`${API_URL}/cliente/${usuario.id_cliente}/mis-turnos`);
+        if (data) {
+            let html = '';
+            data.forEach(t => {
+                html += `<tr>
+                    <td>${formatDate(t.fecha)}</td>
+                    <td>${t.hora.substring(0, 5)}</td>
+                    <td>${t.actividad}</td>
+                    <td><button onclick="cancelarInscripcion(${t.id_inscripcion})" class="btn btn-danger btn-sm btn-action"><i class="fas fa-trash"></i></button></td>
+                </tr>`;
+            });
+            document.getElementById('mis-turnos-body').innerHTML = html || '<tr><td colspan="4" class="text-center text-muted">No hay turnos</td></tr>';
+        }
+    }
+
+    async function cancelarInscripcion(id) {
+        if (!confirm('¿Cancelar inscripción?')) return;
+        const data = await api(`${API_URL}/cliente/${usuario.id_cliente}/inscripciones/${id}`, { method: 'DELETE' });
+        if (data) {
+            notif('Inscripción cancelada', 'success');
+            cargarMisTurnos();
+            cargarTurnosCliente();
+        }
+    }
+
+    async function cargarMiCuota() {
+        const data = await api(`${API_URL}/cliente/${usuario.id_cliente}/estado-cuota`);
+        if (data) {
+            const estado = data.estado === 'PAGADO'
+                ? '<span class="estado-badge estado-pagado">PAGADO</span>'
+                : '<span class="estado-badge estado-adeudado">ADEUDADO</span>';
+
+            const html = `<div class="alert alert-info">
+                <h5>Estado de tu Cuota</h5>
+                <p><strong>Período:</strong> ${data.periodo_actual}</p>
+                <p><strong>Estado:</strong> ${estado}</p>
+                <p>${data.mensaje}</p>
+            </div>`;
+            document.getElementById('mi-cuota-resultado').innerHTML = html;
+        }
+    }
+</script>
+
 </body>
 </html>
-```

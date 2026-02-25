@@ -110,6 +110,100 @@ app.get('/init-audit', (req, res) => {
 });
 
 // ============================================
+// REGISTRO DE USUARIOS
+// ============================================
+
+app.post('/registro', (req, res) => {
+    try {
+        const { username, password, password_confirm, nombre, apellido, dni, categoria, telefono, email } = req.body;
+
+        // Validaciones
+        if (!username || !password || !password_confirm) {
+            return res.status(400).json({ error: 'Usuario y contraseña requeridos' });
+        }
+
+        if (username.length < 3) {
+            return res.status(400).json({ error: 'Usuario debe tener al menos 3 caracteres' });
+        }
+
+        if (password.length < 4) {
+            return res.status(400).json({ error: 'Contraseña debe tener al menos 4 caracteres' });
+        }
+
+        if (password !== password_confirm) {
+            return res.status(400).json({ error: 'Las contraseñas no coinciden' });
+        }
+
+        if (!nombre || !apellido || !dni) {
+            return res.status(400).json({ error: 'Nombre, apellido y DNI son requeridos' });
+        }
+
+        if (!validarDNI(dni)) {
+            return res.status(400).json({ error: 'DNI inválido' });
+        }
+
+        // Verificar si el usuario ya existe
+        db.query('SELECT id_usuario FROM usuarios WHERE username = ?', [username], (err, results) => {
+            if (err) return manejarError(res, err, 'Error al verificar usuario');
+
+            if (results.length > 0) {
+                return res.status(409).json({ error: 'El usuario ya existe' });
+            }
+
+            // Verificar si el DNI ya existe
+            db.query('SELECT id_cliente FROM clientes WHERE dni = ?', [dni], (err, clienteResults) => {
+                if (err) return manejarError(res, err, 'Error al verificar DNI');
+
+                let id_cliente = null;
+
+                // Si el cliente no existe, crearlo
+                if (clienteResults.length === 0) {
+                    db.query(
+                        'INSERT INTO clientes (dni, nombre, apellido, categoria, telefono, email) VALUES (?, ?, ?, ?, ?, ?)',
+                        [dni, nombre, apellido, categoria || 'C', telefono || null, email || null],
+                        (err, clienteResult) => {
+                            if (err) {
+                                if (err.code === 'ER_DUP_ENTRY') {
+                                    return res.status(409).json({ error: 'DNI ya registrado' });
+                                }
+                                return manejarError(res, err, 'Error al crear cliente');
+                            }
+
+                            id_cliente = clienteResult.insertId;
+                            crearUsuario(id_cliente, username, password, res);
+                        }
+                    );
+                } else {
+                    id_cliente = clienteResults[0].id_cliente;
+                    crearUsuario(id_cliente, username, password, res);
+                }
+            });
+        });
+    } catch (err) {
+        manejarError(res, err, 'Error inesperado en registro');
+    }
+});
+
+function crearUsuario(id_cliente, username, password, res) {
+    db.query(
+        'INSERT INTO usuarios (username, password, tipo_usuario, id_cliente) VALUES (?, ?, ?, ?)',
+        [username, password, 'CLIENTE', id_cliente],
+        (err, result) => {
+            if (err) return manejarError(res, err, 'Error al crear usuario');
+
+            notificarCambios('usuario_registrado', { username, id_cliente });
+
+            res.status(201).json({
+                id_usuario: result.insertId,
+                mensaje: 'Usuario registrado exitosamente. ¡Bienvenido!',
+                username: username,
+                tipo_usuario: 'CLIENTE',
+                id_cliente: id_cliente
+            });
+        }
+    );
+}
+// ============================================
 // AUTENTICACIÓN
 // ============================================
 

@@ -13,6 +13,7 @@ const wss = new WebSocket.Server({ server });
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
+
 // ============================================
 // WEBSOCKET - NOTIFICACIONES EN TIEMPO REAL
 // ============================================
@@ -33,7 +34,6 @@ wss.on('connection', (ws) => {
     });
 });
 
-// Función para notificar a todos los clientes conectados
 function notificarCambios(evento, datos) {
     clientes.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
@@ -72,6 +72,7 @@ function registrarAuditoria(usuario_id, accion, detalles) {
         if (err) console.error('Error registrando auditoría:', err);
     });
 }
+
 // Configuración MySQL 8
 const db = mysql.createConnection({
     host: '127.0.0.1',
@@ -87,7 +88,6 @@ db.connect(err => {
     }
     console.log('Conectado a MySQL 8.0 en Laragon');
 });
-
 
 // ============================================
 // CREAR TABLA DE AUDITORÍA (SI NO EXISTE)
@@ -203,6 +203,7 @@ function crearUsuario(id_cliente, username, password, res) {
         }
     );
 }
+
 // ============================================
 // AUTENTICACIÓN
 // ============================================
@@ -244,7 +245,6 @@ app.post('/login', (req, res) => {
 // ADMIN - GESTIÓN DE CLIENTES (MEJORADO)
 // ============================================
 
-// ADMIN: Crear nuevo cliente con más campos
 app.post('/admin/clientes', (req, res) => {
     try {
         const { dni, nombre, apellido, categoria, telefono, email } = req.body;
@@ -287,7 +287,6 @@ app.post('/admin/clientes', (req, res) => {
     }
 });
 
-// ADMIN: Ver todos los clientes activos
 app.get('/admin/clientes', (req, res) => {
     try {
         db.query(
@@ -302,7 +301,6 @@ app.get('/admin/clientes', (req, res) => {
     }
 });
 
-// ADMIN: Ver clientes por categoría
 app.get('/admin/clientes/:cat', (req, res) => {
     try {
         if (!['A', 'B', 'C'].includes(req.params.cat)) {
@@ -322,7 +320,6 @@ app.get('/admin/clientes/:cat', (req, res) => {
     }
 });
 
-// ADMIN: Buscar cliente por término (nombre, DNI, email)
 app.get('/admin/clientes-buscar/:termino', (req, res) => {
     try {
         const termino = `%${req.params.termino}%`;
@@ -343,7 +340,6 @@ app.get('/admin/clientes-buscar/:termino', (req, res) => {
     }
 });
 
-// ADMIN: Actualizar cliente
 app.put('/admin/clientes/:id', (req, res) => {
     try {
         const { nombre, apellido, categoria, telefono, email } = req.body;
@@ -387,7 +383,6 @@ app.put('/admin/clientes/:id', (req, res) => {
     }
 });
 
-// ADMIN: Baja lógica de cliente
 app.delete('/admin/clientes/:id', (req, res) => {
     try {
         const clienteId = req.params.id;
@@ -421,7 +416,6 @@ app.delete('/admin/clientes/:id', (req, res) => {
     }
 });
 
-// ADMIN: Buscar cliente por DNI
 app.get('/admin/cliente-dni/:dni', (req, res) => {
     try {
         if (!validarDNI(req.params.dni)) {
@@ -454,7 +448,6 @@ app.get('/admin/cliente-dni/:dni', (req, res) => {
 // ADMIN - GESTIÓN DE TURNOS (MEJORADO)
 // ============================================
 
-// ADMIN: Crear nuevo turno
 app.post('/admin/turnos', (req, res) => {
     try {
         const { fecha, hora, actividad, cupo_maximo, descripcion } = req.body;
@@ -500,7 +493,6 @@ app.post('/admin/turnos', (req, res) => {
     }
 });
 
-// ADMIN: Ver todos los turnos
 app.get('/admin/turnos', (req, res) => {
     try {
         db.query(
@@ -519,7 +511,6 @@ app.get('/admin/turnos', (req, res) => {
     }
 });
 
-// ADMIN: Cancelar turno
 app.put('/admin/turnos/:id/cancelar', (req, res) => {
     try {
         const turnoId = req.params.id;
@@ -564,7 +555,6 @@ app.put('/admin/turnos/:id/cancelar', (req, res) => {
     }
 });
 
-// ADMIN: Ver inscriptos por turno
 app.get('/admin/turnos/:id/inscriptos', (req, res) => {
     try {
         const turnoId = req.params.id;
@@ -592,7 +582,6 @@ app.get('/admin/turnos/:id/inscriptos', (req, res) => {
     }
 });
 
-// ADMIN: Reporte de ocupación
 app.get('/admin/reporte-ocupacion', (req, res) => {
     try {
         const sql = `
@@ -619,7 +608,6 @@ app.get('/admin/reporte-ocupacion', (req, res) => {
 // ADMIN - REPORTES FINANCIEROS (MEJORADO)
 // ============================================
 
-// ADMIN: Ver ingresos por periodo
 app.get('/admin/ingresos/:periodo', (req, res) => {
     try {
         const periodo = req.params.periodo;
@@ -647,7 +635,6 @@ app.get('/admin/ingresos/:periodo', (req, res) => {
     }
 });
 
-// ADMIN: Ver ingresos del mes actual
 app.get('/admin/ingresos-actuales', (req, res) => {
     try {
         const periodoActual = getPeriodoActual();
@@ -675,7 +662,6 @@ app.get('/admin/ingresos-actuales', (req, res) => {
     }
 });
 
-// ADMIN: Reporte avanzado de finanzas
 app.get('/admin/reporte-finanzas', (req, res) => {
     try {
         const sql = `
@@ -698,7 +684,6 @@ app.get('/admin/reporte-finanzas', (req, res) => {
     }
 });
 
-// ADMIN: Registrar pago
 app.post('/admin/pagos', (req, res) => {
     try {
         const { id_cliente, monto, periodo } = req.body;
@@ -744,7 +729,6 @@ app.post('/admin/pagos', (req, res) => {
 // CLIENTE - VER TURNOS E INSCRIBIRSE
 // ============================================
 
-// CLIENTE: Ver turnos disponibles con descripción
 app.get('/turnos', (req, res) => {
     try {
         const sql = `
@@ -778,7 +762,6 @@ app.get('/turnos', (req, res) => {
     }
 });
 
-// CLIENTE: Inscribirse a un turno
 app.post('/inscribirse', (req, res) => {
     try {
         const { id_cliente, id_turno } = req.body;
@@ -861,11 +844,11 @@ app.post('/inscribirse', (req, res) => {
         manejarError(res, err, 'Error inesperado al inscribirse');
     }
 });
+
 // ============================================
 // ADMIN - GESTIÓN DE CUOTAS Y ESTADOS
 // ============================================
 
-// ADMIN: Ver clientes con estado de cuota actual
 app.get('/admin/clientes-estado-cuota', (req, res) => {
     try {
         const periodoActual = getPeriodoActual();
@@ -895,7 +878,6 @@ app.get('/admin/clientes-estado-cuota', (req, res) => {
     }
 });
 
-// ADMIN: Procesar pago pendiente y habilitar cliente
 app.post('/admin/procesar-cuota/:id_cliente', (req, res) => {
     try {
         const id_cliente = req.params.id_cliente;
@@ -942,7 +924,6 @@ app.post('/admin/procesar-cuota/:id_cliente', (req, res) => {
     }
 });
 
-// ADMIN: Dar de baja cliente por cuota adeudada
 app.post('/admin/baja-por-cuota/:id_cliente', (req, res) => {
     try {
         const id_cliente = req.params.id_cliente;
@@ -982,7 +963,6 @@ app.post('/admin/baja-por-cuota/:id_cliente', (req, res) => {
     }
 });
 
-// ADMIN: Reactivar cliente
 app.post('/admin/reactivar-cliente/:id_cliente', (req, res) => {
     try {
         const id_cliente = req.params.id_cliente;
@@ -1014,7 +994,6 @@ app.post('/admin/reactivar-cliente/:id_cliente', (req, res) => {
     }
 });
 
-// ADMIN: Ver clientes adeudados (sin pago actual)
 app.get('/admin/clientes-adeudados', (req, res) => {
     try {
         const periodoActual = getPeriodoActual();
@@ -1040,11 +1019,11 @@ app.get('/admin/clientes-adeudados', (req, res) => {
         manejarError(res, err, 'Error inesperado');
     }
 });
+
 // ============================================
 // CLIENTE - GESTIONAR SUS INSCRIPCIONES
 // ============================================
 
-// CLIENTE: Ver sus turnos inscritos
 app.get('/cliente/:id/mis-turnos', (req, res) => {
     try {
         const clienteId = req.params.id;
@@ -1079,7 +1058,6 @@ app.get('/cliente/:id/mis-turnos', (req, res) => {
     }
 });
 
-// CLIENTE: Cancelar su propia inscripción
 app.delete('/cliente/:id/inscripciones/:id_inscripcion', (req, res) => {
     try {
         const clienteId = req.params.id;
@@ -1126,7 +1104,6 @@ app.delete('/cliente/:id/inscripciones/:id_inscripcion', (req, res) => {
     }
 });
 
-// CLIENTE: Ver estado de deuda de cuota
 app.get('/cliente/:id/estado-cuota', (req, res) => {
     try {
         const clienteId = req.params.id;
@@ -1182,7 +1159,6 @@ app.get('/cliente/:id/estado-cuota', (req, res) => {
 // REPORTES Y EXPORTACIÓN
 // ============================================
 
-// Exportar clientes a CSV
 app.get('/admin/clientes-csv', (req, res) => {
     try {
         db.query('SELECT * FROM clientes WHERE activo = 1', (err, results) => {
@@ -1202,7 +1178,6 @@ app.get('/admin/clientes-csv', (req, res) => {
     }
 });
 
-// Exportar turnos a CSV
 app.get('/admin/turnos-csv', (req, res) => {
     try {
         db.query(
@@ -1238,7 +1213,7 @@ app.get('/info', (req, res) => {
             periodo_actual: getPeriodoActual(),
             websocket: 'Activado - Actualizaciones en tiempo real',
             endpoints: {
-                autenticacion: ['/login'],
+                autenticacion: ['/login', '/registro'],
                 admin_clientes: [
                     'POST /admin/clientes',
                     'GET /admin/clientes',

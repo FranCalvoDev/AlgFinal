@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gym Laragon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style> .oculto { display: none; } </style>
+</head>
+<body class="container py-5">
+    <h2 class="text-center mb-4">Sistema de Gimnasio</h2>
+
+    <!-- LOGIN -->
+    <div id="seccion-login" class="card p-4 mx-auto" style="max-width: 350px;">
+        <input type="text" id="user" class="form-control mb-2" placeholder="Usuario (admin o cliente)">
+        <input type="password" id="pass" class="form-control mb-2" placeholder="Password">
+        <button onclick="login()" class="btn btn-primary w-100">Entrar</button>
+    </div>
+
+    <!-- PANEL ADMIN -->
+    <div id="panel-admin" class="oculto">
+        <div class="row">
+            <div class="col-md-6 card p-3">
+                <h4>Filtro Clientes</h4>
+                <select id="sel-cat" onchange="verClientes()" class="form-select mb-2">
+                    <option value="A">Categoría A</option>
+                    <option value="B">Categoría B</option>
+                    <option value="C">Categoría C</option>
+                </select>
+                <ul id="lista-clientes" class="list-group"></ul>
+            </div>
+            <div class="col-md-6 card p-3">
+                <h4>Recaudación Período</h4>
+                <input type="text" id="per-busq" class="form-control mb-2" placeholder="2024-05">
+                <button onclick="verIngresos()" class="btn btn-success">Calcular</button>
+                <h3 id="total-ingresos" class="mt-2 text-primary"></h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL CLIENTE -->
+    <div id="panel-cliente" class="oculto">
+        <h4>Turnos Disponibles</h4>
+        <div id="lista-turnos" class="row"></div>
+    </div>
+
+    <script>
+        let usuario = null;
+
+        async function login() {
+            const res = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: document.getElementById('user').value, password: document.getElementById('pass').value})
+            });
+            if (res.ok) {
+                usuario = await res.json();
+                document.getElementById('seccion-login').classList.add('oculto');
+                if (usuario.tipo_usuario === 'ADMIN') {
+                    document.getElementById('panel-admin').classList.remove('oculto');
+                } else {
+                    document.getElementById('panel-cliente').classList.remove('oculto');
+                    cargarTurnos();
+                }
+            } else alert("Datos incorrectos");
+        }
+
+        async function verClientes() {
+            const cat = document.getElementById('sel-cat').value;
+            const res = await fetch('http://localhost:3000/admin/clientes/' + cat);
+            const data = await res.json();
+            document.getElementById('lista-clientes').innerHTML = data.map(c => `<li class="list-group-item">${c.nombre} ${c.apellido}</li>`).join('');
+        }
+
+        async function verIngresos() {
+            const per = document.getElementById('per-busq').value;
+            const res = await fetch('http://localhost:3000/admin/ingresos/' + per);
+            const data = await res.json();
+            document.getElementById('total-ingresos').innerText = `$ ${data.total || 0}`;
+        }
+
+        async function cargarTurnos() {
+            const res = await fetch('http://localhost:3000/turnos');
+            const data = await res.json();
+            document.getElementById('lista-turnos').innerHTML = data.map(t => `
+                <div class="col-md-4 card p-2 m-1">
+                    <h5>${t.actividad}</h5>
+                    <p>${t.fecha} - ${t.hora.substring(0,5)} hs<br>Cupos: <b>${t.cupo_disponible}</b></p>
+                    <button onclick="inscribirse(${t.id_turno})" class="btn btn-primary btn-sm">Anotarse</button>
+                </div>
+            `).join('');
+        }
+
+        async function inscribirse(id) {
+            const res = await fetch('http://localhost:3000/inscribirse', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ id_cliente: usuario.id_cliente, id_turno: id, periodo_actual: '2024-05' })
+            });
+            const msg = await res.text();
+            alert(msg);
+            cargarTurnos();
+        }
+    </script>
+</body>
+</html>
